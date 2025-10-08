@@ -1,16 +1,55 @@
 # Flutter Gemini AI API Example App
 
-A new Flutter project.
+Minimal chat UI that calls Gemini REST API directly (no SDK) to generate text and images.
 
-## Getting Started
+## Quick start
 
-This project is a starting point for a Flutter application.
+1) Clone and install
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+flutter pub get
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2) Configure API key
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-  `.env` and set your key:
+
+```
+GEMINI_API_KEY=YOUR_API_KEY
+# Optional (defaults to gemini-2.5-flash)
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+Note: `.env` is already git-ignored.
+
+3) Run the app
+
+- Android: connect a device/emulator, then:
+```sh
+flutter run -d android
+```
+- iOS (on macOS):
+```sh
+flutter run -d ios
+```
+- Web:
+```sh
+flutter run -d chrome
+```
+- Windows/Mac/Linux (desktop enabled):
+```sh
+flutter run
+```
+
+## How it works (REST only)
+- The app constructs Gemini chat history as `contents` with role `user`/`model` and `parts`.
+- It posts JSON to: `https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key=API_KEY` using `package:http`.
+- Text is read from `part.text`.
+- Images (if any) are read from `inline_data` as base64 and displayed.
+
+See `lib/services/gemini_ai_service.dart` and `lib/main.dart`.
+
+## Tips
+- If you see “Missing GEMINI_API_KEY”, ensure `.env` exists and contains your key.
+- To switch models, change `GEMINI_MODEL` in `.env`.
+- Network errors will appear as a Snackbar with the server message.
